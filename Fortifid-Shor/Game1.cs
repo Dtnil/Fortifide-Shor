@@ -61,6 +61,6 @@ public class Game1 : Game
     {
         _spriteBatch.Begin();
         
-        _spriteBatch.Draw(_textures.Get("Grass"), null);
+        
     }
 }
