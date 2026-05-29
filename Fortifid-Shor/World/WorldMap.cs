@@ -26,7 +26,7 @@ public class WorldMap
         _mapWidth = mapWidth;
         _mapHeight = mapHeight;
         _textures = textures;
-        _tiles = MapGenerator.Ganerate();
+        _tiles = MapGenerator.Ganerate(mapWidth, mapHeight, seed, textures);
     }
 
     public Tile? GetTile(int tileX, int tileY)
@@ -95,11 +95,11 @@ public class WorldMap
         {
             switch (tile.Object)
             {
-                case null:
-                    
+                case VegetationObject veg:
+                    veg.Update(deltaTime);
                     break;
-                case null:
-                    
+                case OreDeposit ore:
+                    ore.Update(deltaTime);
                     break;
             }
         }

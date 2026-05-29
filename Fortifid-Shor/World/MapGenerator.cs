@@ -20,8 +20,10 @@ public static class MapGenerator
 
     private static int _seed;
     
-    public static int Tile[,] Generate(int mapWidth, int mapHeight,
-        int seed, TextureManager textures)
+    public static Tile[,] Generate (
+        int mapWidth, int mapHeight,
+        int seed, 
+        TextureManager textures)
     {
         _seed = seed == 0 ? System.Environment.TickCount : seed;
         var rng = new System.Random(_seed);
@@ -42,7 +44,7 @@ public static class MapGenerator
         }
         PlaceObjects(tiles, mapWidth, mapHeight, heightMap, textures, rng);
         
-        return tiles; 
+        return tiles;
     }
 
     private static float[,] BuildHeightMap(int w, int h, System.Random rng)
@@ -60,7 +62,8 @@ public static class MapGenerator
             {
                 float noiseVal = FractionalBrowianMotion(
                     (x + offsetX) * scale,
-                    (y + offsetY) * scale
+                    (y + offsetY) * scale,
+                    octaves: 4
                     );
                 float islandMask = ComputeIslandMask(x, y, w, h);
                 
@@ -141,6 +144,69 @@ public static class MapGenerator
         TextureManager textures, System.Random rng)
     {
         int ts = WorldMap.Tile_Size;
+        
+        var treeTextures = textures.GetTeeTexture();
+
+        for (int x = 0; x < w; x++)
+        {
+            for (int y = 0; y < h; y++)
+            {
+                if (tiles[x, y].Type != TileType.Grass) continue;
+                
+                float roll = (float)rng.NextDouble();
+                Vector2 pos = new Vector2(x * ts, y * ts);
+
+                MapObject? obj = null;
+
+                if (roll < Ore_Density)
+                {
+                    bool isCopper = rng.NextDouble() < 0.5;
+                    obj = isCopper
+                        ? new OreDeposit(
+                            textures.Get("Coper_rock"), textures.Get("Coper_ore"),
+                            pos, ts, (int)(ts * 1.1f),
+                            OreDeposit.OreType.Copper, oreYield: 2)
+                        : new OreDeposit(
+                            textures.Get("Iron_rock"), textures.Get("Iron_ore"),
+                            pos, ts, (int)(ts * 1.1f),
+                            OreDeposit.OreType.Iron, oreYield: 2);
+                }
+                else if(roll < Ore_Density+Ore_Density)
+                {
+                    float h2 = heightMap[x, y];
+                    string rockKey = h2 > 0.75f ? "Rock_granit"
+                        : h2 > 0.65f ? "Rock_big"
+                            : h2 > 0.55f ? "Rock_mid"
+                            :"Rock_small";
+                    int yield = rockKey == "Rock_granit" ? 5 :
+                        rockKey == "Rock_big" ? 4 :
+                        rockKey == "Rock_mid" ? 2 : 1;
+                    obj = new RockObject(
+                        textures.Get(rockKey), pos,
+                        ts, (int)(ts * 0.9f),
+                        stoneYield: yield, maxHits: yield);
+                }
+                else if (roll < Ore_Density+Rock_Density + Sprout_Density)
+                {
+                    obj = new VegetationObject(
+                        textures.Get("Sprout"), pos,
+                        (int)(ts * 0.5f), (int)(ts * 0.6f),
+                        woodYield: 1);
+                }
+                else if (roll < Ore_Density + Rock_Density + Sprout_Density + Tree_Density)
+                {
+                    bool isPalm = rng.NextDouble() < 0.15;
+                    var tex = isPalm
+                        ? textures.Get("Palm")
+                        : treeTextures[rng.Next(treeTextures.Count)];
+                    int w2 = isPalm ? (int)(ts * 1.1f) : (int)(ts * 1.2f);
+                    int h3 = isPalm ? (int)(ts * 1.8f) : (int)(ts * 2.0f);
+                    obj = new VegetationObject(tex, pos, w2, h3, woodYield: isPalm ? 2 : 3);
+                }
+                if (obj != null)
+                    tiles[x, y].PlaceObject(obj);
+            }
+        }
         
     }
 }
