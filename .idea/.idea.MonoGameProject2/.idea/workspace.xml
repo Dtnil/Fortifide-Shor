@@ -14,41 +14,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="24a7e782-df63-4627-b274-7e3374aa1d51" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Fortifid-Shor/Fortifid-Shor.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MonoGameProject2/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MonoGameProject2/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MonoGameProject2/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MonoGameProject2/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/.config/dotnet-tools.json" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/.config/dotnet-tools.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/.vscode/launch.json" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/.vscode/launch.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Content.mgcb" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Content.mgcb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Coper_ore.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Coper_ore.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Coper_rock.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Coper_rock.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Crab_Anim.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Crab_Anim.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Grass.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Grass.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Iron_ore.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Iron_ore.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Iron_rock.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Iron_rock.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Palm.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Palm.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Rock_big.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Rock_big.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Rock_granit.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Rock_granit.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Rock_mid.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Rock_mid.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Rock_small.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Rock_small.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Sand.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Sand.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Shore.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Shore.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Sprout.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Sprout.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Tree.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Tree.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Tree2.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Tree2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Tree3.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Tree3.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Tree4.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Tree4.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Tree5.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Tree5.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Content/Water.png" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Water.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Game1.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Game1.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Icon.bmp" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Icon.bmp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Icon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Icon.ico" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/MonoGameProject2.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MonoGameProject2/app.manifest" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/app.manifest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fortifid-Shor/Content/Content.mgcb" beforeDir="false" afterPath="$PROJECT_DIR$/Fortifid-Shor/Content/Content.mgcb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,8 +25,21 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/AppData/Local/Temp/150e37b8-a9ab-4003-bb21-2f38142e4c18_IslandSurvival_OOP.zip.c18/MonoGameProject2/MonoGameProject2/Systems/TextureManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Local/Temp/18b31a95-3b7c-45e2-bc06-d0cfe98c0415_IslandSurvival_OOP.zip.415/MonoGameProject2/MonoGameProject2/Systems/TextureManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Local/Temp/37238a95-afd9-4364-b846-6ab4a768e8fb_IslandSurvival_OOP.zip.8fb/MonoGameProject2/MonoGameProject2/Core/Crab.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Local/Temp/5565554f-ec1a-4aec-8f4e-6466412bd752_IslandSurvival_OOP.zip.752/MonoGameProject2/MonoGameProject2/Game1.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Local/Temp/5fd92b9b-4170-408c-b37c-09285146fc75_IslandSurvival_OOP.zip.c75/MonoGameProject2/MonoGameProject2/World/MapGenerator.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Temp/87e1748a-8db2-4e11-80b7-e2cf0d5e13b6_IslandSurvival.zip.IslandSurvival.zip/IslandSurvival/Game.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Local/Temp/e941f00e-dc39-42ae-93a0-413581f1bd53_IslandSurvival_OOP.zip.d53/MonoGameProject2/MonoGameProject2/Systems/Camera.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Fortifid-Shor/Systems/Camera.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Fortifid-Shor/Systems/TextureManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Fortifid-Shor/World/MapGenerator.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Fortifid-Shor/World/MapObject.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Fortifid-Shor/World/Tile.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Fortifid-Shor/World/TileType.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5,
   &quot;fromUser&quot;: false
@@ -123,13 +102,14 @@
       <workItem from="1779814318810" duration="2556000" />
       <workItem from="1779827563381" duration="4514000" />
       <workItem from="1779956287875" duration="328000" />
-      <workItem from="1779960633388" duration="486000" />
+      <workItem from="1779960633388" duration="18358000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />

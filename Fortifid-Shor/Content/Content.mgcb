@@ -13,7 +13,7 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin ../../../../OneDrive/Pictures/Dnd/Crab_Anim.png
+#begin Textures/Entities/Crab_Anim.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -23,9 +23,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:../../../../OneDrive/Pictures/Dnd/Crab_Anim.png;Crab_Anim.png
+/build:Textures/Entities/Crab_Anim.png;Textures/Entities/Crab_Anim
 
-#begin Coper_ore.png
+#begin Textures/Ores/Coper_ore.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -35,9 +35,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Coper_ore.png
+/build:Textures/Ores/Coper_ore.png;Textures/Ores/Coper_ore
 
-#begin Coper_rock.png
+#begin Textures/Ores/Coper_rock.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -47,21 +47,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Coper_rock.png
+/build:Textures/Ores/Coper_rock.png;Textures/Ores/Coper_rock
 
-#begin Crab_Anim.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,176,0,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Crab_Anim.png
-
-#begin Grass.png
+#begin Textures/Ores/Iron_ore.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -71,9 +59,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Grass.png
+/build:Textures/Ores/Iron_ore.png;Textures/Ores/Iron_ore
 
-#begin Iron_ore.png
+#begin Textures/Ores/Iron_rock.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -83,9 +71,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Iron_ore.png
+/build:Textures/Ores/Iron_rock.png;Textures/Ores/Iron_rock
 
-#begin Iron_rock.png
+#begin Textures/Rocks/Rock_big.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -95,9 +83,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Iron_rock.png
+/build:Textures/Rocks/Rock_big.png;Textures/Rocks/Rock_big
 
-#begin Palm.png
+#begin Textures/Rocks/Rock_granit.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -107,9 +95,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Palm.png
+/build:Textures/Rocks/Rock_granit.png;Textures/Rocks/Rock_granit
 
-#begin Rock_big.png
+#begin Textures/Rocks/Rock_mid.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -119,9 +107,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Rock_big.png
+/build:Textures/Rocks/Rock_mid.png;Textures/Rocks/Rock_mid
 
-#begin Rock_granit.png
+#begin Textures/Rocks/Rock_small.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -131,9 +119,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Rock_granit.png
+/build:Textures/Rocks/Rock_small.png;Textures/Rocks/Rock_small
 
-#begin Rock_mid.png
+#begin Textures/Tiles/Grass.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -143,9 +131,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Rock_mid.png
+/build:Textures/Tiles/Grass.png;Textures/Tiles/Grass
 
-#begin Rock_small.png
+#begin Textures/Tiles/Sand.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -155,9 +143,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Rock_small.png
+/build:Textures/Tiles/Sand.png;Textures/Tiles/Sand
 
-#begin Sand.png
+#begin Textures/Tiles/Shore.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -167,9 +155,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sand.png
+/build:Textures/Tiles/Shore.png;Textures/Tiles/Shore
 
-#begin Shore.png
+#begin Textures/Tiles/Water.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -179,9 +167,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Shore.png
+/build:Textures/Tiles/Water.png;Textures/Tiles/Water
 
-#begin Sprout.png
+#begin Textures/Vegetation/Palm.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -191,9 +179,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprout.png
+/build:Textures/Vegetation/Palm.png;Textures/Vegetation/Palm
 
-#begin Tree.png
+#begin Textures/Vegetation/Sprout.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -203,9 +191,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Tree.png
+/build:Textures/Vegetation/Sprout.png;Textures/Vegetation/Sprout
 
-#begin Tree2.png
+#begin Textures/Vegetation/Tree.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -215,9 +203,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Tree2.png
+/build:Textures/Vegetation/Tree.png;Textures/Vegetation/Tree
 
-#begin Tree3.png
+#begin Textures/Vegetation/Tree2.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -227,9 +215,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Tree3.png
+/build:Textures/Vegetation/Tree2.png;Textures/Vegetation/Tree2
 
-#begin Tree4.png
+#begin Textures/Vegetation/Tree3.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -239,9 +227,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Tree4.png
+/build:Textures/Vegetation/Tree3.png;Textures/Vegetation/Tree3
 
-#begin Tree5.png
+#begin Textures/Vegetation/Tree4.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -251,9 +239,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Tree5.png
+/build:Textures/Vegetation/Tree4.png;Textures/Vegetation/Tree4
 
-#begin Water.png
+#begin Textures/Vegetation/Tree5.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -263,5 +251,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Water.png
+/build:Textures/Vegetation/Tree5.png;Textures/Vegetation/Tree5
 
