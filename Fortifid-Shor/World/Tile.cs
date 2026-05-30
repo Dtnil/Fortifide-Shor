@@ -28,7 +28,7 @@ public class Tile
         _object = obj;
     }
 
-    public void RemoveObject(MapObject obj)
+    public void RemoveObject()
     {
         _object = null;
     }
