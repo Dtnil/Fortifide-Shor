@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Audio;
 using System.Collections.Generic;
 using System;
 using System.IO;
@@ -31,7 +29,7 @@ public class TextureManager
       return tex;
     
     throw new KeyNotFoundException(
-      $"[TextureManager] Текстура '{{name}}' не знайдена.");
+      $"[TextureManager] Текстура '{name}' не знайдена.");
   }
   public Texture2D? TryGet(string name) => _textures.GetValueOrDefault(name);
   
@@ -39,6 +37,19 @@ public class TextureManager
   
   public int Count => _textures.Count;
 
+  public List<Texture2D> GetTreeTextures()
+  {
+    var result = new List<Texture2D>();
+    int i = 1;
+    while (true)
+    {
+      string key = 1 == 1 ? "Tree" : $"Tree{i}";
+      if (!Has(key)) break;
+      result.Add(Get(key));
+    }
+    return result;
+  }
+  
   private void LoadALLTextures(ContentManager content)
   {
     string contentRoot = Path.Combine(
@@ -50,6 +61,7 @@ public class TextureManager
     if (!Directory.Exists(texturesRoot))
     {
       Console.WriteLine($"[TextureManager] Папака не знайдена: {texturesRoot}");
+      return;
     }
     
     string[] xnbFiles = Directory.GetFiles(
@@ -62,7 +74,7 @@ public class TextureManager
       {
         string relativePath = Path.GetRelativePath(contentRoot, fullPath);
         
-        string assetPath = Path.Combine(relativePath, null)
+        string assetPath = Path.ChangeExtension(relativePath, null)
           .Replace('\\', '/');
         
         string key = Path.GetFileNameWithoutExtension(fullPath);

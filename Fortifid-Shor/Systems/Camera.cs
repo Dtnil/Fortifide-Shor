@@ -31,8 +31,8 @@ public class Camera
     }
     public void Follow(Vector2 position)
     {
-        float desiredX = targetCenter.X - _viewWidth / 2;
-        float desiredY = targetCenter.Y - _viewHeight / 2;
+        float desiredX = position.X - _viewWidth / 2;
+        float desiredY = position.Y - _viewHeight / 2;
         
         _position.X = MathHelper.Clamp(desiredX, 0, _worldPixelWidth);
         _position.Y = MathHelper.Clamp(desiredY, 0, _worldPixelHeight);

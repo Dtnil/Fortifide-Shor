@@ -106,8 +106,8 @@ public static class MapGenerator
     {
         int ix = (int)MathF.Floor(x);
         int iy = (int)MathF.Floor(y);
-        float u = x - ix;
-        float v = y - iy;
+        float fx = x - ix;
+        float fy = y - iy;
 
         float ux = fx * fx * (3f - 2f * fx);
         float uy = fy * fx * (3f - 2f * fy);
@@ -145,7 +145,7 @@ public static class MapGenerator
     {
         int ts = WorldMap.Tile_Size;
         
-        var treeTextures = textures.GetTeeTexture();
+        var treeTextures = textures.GetTreeTextures();
 
         for (int x = 0; x < w; x++)
         {

@@ -7,7 +7,7 @@ namespace Fortifid.World;
 public class RockObject : MapObject
 {
     private readonly int _stoneYield;
-    private int _maxHits;
+    private readonly int _maxHits;
     private int _hitsLeft;
 
     public override string ResorurceName => "Камінь";
@@ -25,7 +25,7 @@ public class RockObject : MapObject
 
     public override void Draw(SpriteBatch spriteBatch, Camera camera)
     {
-        if (!IsAlive) return;
+        if (!isAlive) return;
 
         Rectangle destRect = GetScreenRect(camera, WorldMap.Tile_Size);
         

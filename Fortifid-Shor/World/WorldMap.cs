@@ -26,7 +26,7 @@ public class WorldMap
         _mapWidth = mapWidth;
         _mapHeight = mapHeight;
         _textures = textures;
-        _tiles = MapGenerator.Ganerate(mapWidth, mapHeight, seed, textures);
+        _tiles = MapGenerator.Generate(mapWidth, mapHeight, seed, textures);
     }
 
     public Tile? GetTile(int tileX, int tileY)
