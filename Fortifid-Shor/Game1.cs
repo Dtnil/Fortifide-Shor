@@ -2,7 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using Fortifid.Core;
 using Fortifid.Systems;
+using Fortifid.World;
 
 namespace Fortifid;
 
@@ -15,13 +17,18 @@ public class Game1 : Game
     private const int WindowHeight = 720;
     private const int Map_Widht = 120;
     private const int Map_Height = 90;
+    private const int Map_Seed = 0;
     
     private TextureManager _textures = null;
+    private WorldMap _world = null;
+    private Camera _camera = null;
+    private Player _player = null;
     
     private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
+    private SpriteBatch _spriteBatch = null;
     private SpriteFont? _font;
 
+    
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
