@@ -33,7 +33,7 @@ public class Crab : Enemy
         
         float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         
-        UpdateAnimation();
+        UpdateAnimation(dt);
         
         _attackTimer = MathHelper.Max(0f, _attackTimer - dt);
     }
