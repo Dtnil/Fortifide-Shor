@@ -14,7 +14,7 @@ public class Tile
     public Vector2 Worldposition => _Worldposition;
     public MapObject? Object => _object;
     
-    public bool IsWalkable => _type != TileType.Water && _object != null;
+    public bool IsWalkable => _type != TileType.Water && _object == null;
 
     public Tile(TileType type, Vector2 worldposition)
     {

@@ -20,18 +20,18 @@ public class TextureManager
 
   public TextureManager(ContentManager content)
   {
-    LoadALLTextures(content);
+    LoadAllTextures(content);
   }
 
   public Texture2D Get(string name)
   {
-    if (_textures.TryGetValue(name, out Texture2D? tex))
+    if (_textures.TryGetValue(name, out Texture2D tex))
       return tex;
     
     throw new KeyNotFoundException(
       $"[TextureManager] Текстура '{name}' не знайдена.");
   }
-  public Texture2D? TryGet(string name) => _textures.GetValueOrDefault(name);
+  public Texture2D TryGet(string name) => _textures.GetValueOrDefault(name);
   
   public bool Has(string name) => _textures.ContainsKey(name);
   
@@ -43,14 +43,15 @@ public class TextureManager
     int i = 1;
     while (true)
     {
-      string key = 1 == 1 ? "Tree" : $"Tree{i}";
+      string key = i == 1 ? "Tree" : $"Tree{i}";
       if (!Has(key)) break;
       result.Add(Get(key));
+      i++;
     }
     return result;
   }
   
-  private void LoadALLTextures(ContentManager content)
+  private void LoadAllTextures(ContentManager content)
   {
     string contentRoot = Path.Combine(
       AppDomain.CurrentDomain.BaseDirectory,

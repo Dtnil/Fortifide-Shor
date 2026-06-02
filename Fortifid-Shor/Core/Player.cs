@@ -86,7 +86,7 @@ public class Player : Entity
             var (txX, tyX) = world.WorldToTile(_position + new Vector2(dir.X * _speed * dt, 0)+ new Vector2(Draw_Size / 2f));
             if (world.GetTile(txX, tyX)?.IsWalkable == true)
                 _position.X += dir.X * _speed * dt;
-            var (txY,tyY) = world.WorldToTile(_position + new Vector2(dir.Y * _speed * dt, 0)+ new Vector2(Draw_Size / 2f));
+            var (txY, tyY) = world.WorldToTile(_position + new Vector2(0, dir.Y * _speed * dt) + new Vector2(Draw_Size / 2f));
             if  (world.GetTile(txY, tyY)?.IsWalkable == true)
                 _position.Y += dir.Y * _speed * dt;
         }

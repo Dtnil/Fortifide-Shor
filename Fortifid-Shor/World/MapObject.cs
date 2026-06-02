@@ -31,7 +31,7 @@ public abstract class MapObject
         Vector2 screen = _worldPosition - camera.Position;
         return new Rectangle(
             (int)screen.X + tileSize / 2 - _drawWidth / 2,
-            (int)screen.Y / tileSize - _drawHeight,
+            (int)screen.Y + tileSize - _drawHeight,
             _drawWidth,
             _drawHeight
         );

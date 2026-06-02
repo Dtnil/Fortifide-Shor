@@ -110,7 +110,7 @@ public static class MapGenerator
         float fy = y - iy;
 
         float ux = fx * fx * (3f - 2f * fx);
-        float uy = fy * fx * (3f - 2f * fy);
+        float uy = fy * fy * (3f - 2f * fy);
 
         float n00 = ValueNoise(ix, iy);
         float n10 = ValueNoise(ix + 1, iy);
@@ -171,7 +171,7 @@ public static class MapGenerator
                             pos, ts, (int)(ts * 1.1f),
                             OreDeposit.OreType.Iron, oreYield: 2);
                 }
-                else if(roll < Ore_Density+Ore_Density)
+                else if(roll < Ore_Density + Rock_Density)
                 {
                     float h2 = heightMap[x, y];
                     string rockKey = h2 > 0.75f ? "Rock_granit"

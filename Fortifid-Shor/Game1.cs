@@ -51,7 +51,7 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _textures = new TextureManager(Content);
-        _world=new WorldMap(WindowWidth, WindowHeight, Map_Seed, _textures);
+        _world = new WorldMap(WindowWidth, WindowHeight, Map_Seed, _textures);
 
         _camera = new Camera(
             WindowWidth, WindowHeight,
@@ -108,7 +108,7 @@ public class Game1 : Game
             enemy.Draw(_spriteBatch, _camera);
 
         DrawPlayerPlaceholder();
-        
+        DrawHUD();
         _spriteBatch.End();
         
         base.Draw(gameTime);
@@ -152,6 +152,13 @@ public class Game1 : Game
         const int BAR_W = 180;
         const int BAR_H = 18;
         const int GAP   = 8;
+        int y = 20;
+
+        DrawBar(BAR_X, y, BAR_W, BAR_H, _player.Hp / 100f, new Color(200, 50, 50), "HP");
+        y += BAR_H + GAP;
+        DrawBar(BAR_X, y, BAR_W, BAR_H, _player.Hunger / 100f, new Color(200, 150, 50), "Hunger");
+        y += BAR_H + GAP;
+        DrawBar(BAR_X, y, BAR_W, BAR_H, _player.Thirst / 100f, new Color(50, 150, 200), "Thirst");
     }
 
     private void DrawBar(int x, int y, int w, int h, float fill, Color color, string label)

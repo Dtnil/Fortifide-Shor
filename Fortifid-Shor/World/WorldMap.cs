@@ -15,8 +15,6 @@ public class WorldMap
     private readonly int _mapHeight;
     private readonly TextureManager _textures;
     
-    public int MapWidth => _mapWidth;
-    public int MapHeight => _mapHeight;
     public int Pixel_Width => _mapWidth * Tile_Size;
     public int Pixel_Height => _mapHeight * Tile_Size;
 
@@ -67,8 +65,8 @@ public class WorldMap
     {
         int startX = Math.Max(0, (int)(camera.Position.X / Tile_Size) - 1);
         int startY = Math.Max(0, (int)(camera.Position.Y / Tile_Size) - 1);
-        int endX = Math.Min(_mapWidth, startX + camera.ViewWidth);
-        int endY = Math.Min(_mapHeight, startY + camera.ViewHeight);
+        int endX = Math.Min(_mapWidth,  startX + (camera.ViewWidth  / Tile_Size) + 2);
+        int endY = Math.Min(_mapHeight, startY + (camera.ViewHeight / Tile_Size) + 2);
 
         for (int x = startX; x < endX; x++)
         {
@@ -111,7 +109,7 @@ public class WorldMap
         return type switch
         {
             TileType.Water => _textures.Get("Water"),
-            TileType.Shore => _textures.Get("Shore"),
+            TileType.Shore => _textures.Get("Water"),
             TileType.Sand => _textures.Get("Sand"),
             TileType.Grass => _textures.Get("Grass"),
             _ => _textures.Get("Grass")
