@@ -13,6 +13,30 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Sounds/Environment/Forest.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/Environment/Forest.mp3
+
+#begin Sounds/Environment/Waves.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/Environment/Waves.mp3
+
+#begin Sounds/Walk/Footsteps_on_sand.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/Walk/Footsteps_on_sand.mp3
+
+#begin Sounds/Walk/Running_on_ grass.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/Walk/Running_on_ grass.mp3
+
 #begin Textures/Entities/Crab_Anim.png
 /importer:TextureImporter
 /processor:TextureProcessor
