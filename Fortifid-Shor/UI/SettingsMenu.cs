@@ -16,7 +16,7 @@ public class SettingsMenu
 {
     private readonly GraphicsDeviceManager _graphics;
     private readonly SettingsManager       _settings;
-    private readonly SoundManger          _sound;
+    private readonly SoundManager          _sound;
 
     private readonly Texture2D _pixel;
     private readonly int       _sw, _sh;
@@ -49,8 +49,8 @@ public class SettingsMenu
     private static readonly Color ColSubtext  = new(180, 180, 200);
 
     public SettingsMenu(GraphicsDevice gd, GraphicsDeviceManager graphics,
-                        SettingsManager settings, SoundManger sound,
-                        int screenW, int screenH)
+        SettingsManager settings, SoundManager sound,
+        int screenW, int screenH)
     {
         _graphics = graphics;
         _settings = settings;
@@ -91,7 +91,7 @@ public class SettingsMenu
         _settings.SfxVolume    = _sliderSfx.Value;
 
         bool clicked = mouse.LeftButton == ButtonState.Released
-                    && _prevMouse.LeftButton == ButtonState.Pressed;
+                       && _prevMouse.LeftButton == ButtonState.Pressed;
 
         bool hBack = _btnBack.Contains(mp);
         _scaleBack = Lerp(_scaleBack, hBack ? 1.06f : 1f, 8f * dt);
@@ -109,7 +109,7 @@ public class SettingsMenu
 
             if (_checkFullscreen.Contains(mp))
             {
-                _settings.IsFullScreen = !_settings.IsFullScreen;
+                _settings.IsFullscreen = !_settings.IsFullscreen;
                 ApplyResolution();
             }
 
@@ -147,7 +147,7 @@ public class SettingsMenu
         DrawButtonRect(sb, _btnResolution, $"{rw} × {rh}  ►");
 
         DrawLabel(sb, "Повноекранний режим", _checkFullscreen.X + 34, _checkFullscreen.Y);
-        DrawCheckbox(sb, _checkFullscreen, _settings.IsFullScreen);
+        DrawCheckbox(sb, _checkFullscreen, _settings.IsFullscreen);
 
         DrawSlider(sb, _sliderMaster, "Загальна гучність");
         DrawSlider(sb, _sliderMusic,  "Музика");
@@ -192,7 +192,7 @@ public class SettingsMenu
             Value = _settings.SfxVolume
         };
         y += 65;
-
+        
         int bw = 160, bh = 44;
         _btnBack = new Rectangle(px + (PanelW - bw) / 2, py + PanelH - 64, bw, bh);
     }
@@ -201,7 +201,7 @@ public class SettingsMenu
     {
         _graphics.PreferredBackBufferWidth  = _settings.ResolutionWidth;
         _graphics.PreferredBackBufferHeight = _settings.ResolutionHeight;
-        _graphics.IsFullScreen              = _settings.IsFullScreen;
+        _graphics.IsFullScreen              = _settings.IsFullscreen;
         _graphics.ApplyChanges();
     }
 
@@ -296,7 +296,6 @@ public class SettingsMenu
     private void DrawLabel(SpriteBatch sb, string text, int x, int y,
         Color? color = null)
     {
-
         var c = color ?? ColText;
         sb.Draw(_pixel, new Rectangle(x, y + 6, Math.Min(text.Length * 8, 300), 8), c * 0.8f);
     }
