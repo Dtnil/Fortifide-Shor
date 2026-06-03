@@ -1,4 +1,4 @@
-﻿using Fortifid.Systems;
+using Fortifid.Systems;
 using XnaRect = Microsoft.Xna.Framework.Rectangle;
 using Fortifid.World;
 using Microsoft.Xna.Framework;
@@ -14,19 +14,21 @@ public class Player : Entity
     private float _hunger = 100f;
     private float _thirst = 100f;
 
-    private const float Hunger_Decay = 1.5f;
-    private const float Thirst_Decay = 2f;
-    private const float Starvation_Damage_Per_Sec = 5f;
+    private const float HungerDecay = 1.5f;
+    private const float ThirstDecay = 2f;
+    private const float StarvationDamagePerSec = 5f;
 
-    private const int Draw_Size = 64;
+    private const int DrawSize = 64;
 
-    private const float Interact_Cooldown = 0.5f;
+    private const float InteractCooldown = 0.5f;
+    private const float InteractionRange = 95f;
     private float _interactTimer;
 
     public bool IsMoving { get; private set; }
 
     public float Hunger => _hunger;
     public float Thirst => _thirst;
+    public Inventory Inventory { get; } = new();
 
     public Player(Texture2D? texture, Vector2 spawnPosition)
         : base("Гравець", maxHP: 100, speed: 200f)
@@ -46,7 +48,7 @@ public class Player : Entity
         var kb = Keyboard.GetState();
         if (kb.IsKeyDown(Keys.E) && _interactTimer <= 0f)
         {
-            _interactTimer = Interact_Cooldown;
+            _interactTimer = InteractCooldown;
             TryInteract(world);
         }
     }
@@ -79,7 +81,7 @@ public class Player : Entity
 
         Vector2 newPos = _position + dir * _speed * dt;
 
-        var (tx, ty) = world.WorldToTile(newPos + new Vector2(Draw_Size / 2f));
+        var (tx, ty) = world.WorldToTile(newPos + new Vector2(DrawSize / 2f));
         var tile = world.GetTile(tx, ty);
 
         if (tile?.IsWalkable == true)
@@ -90,13 +92,13 @@ public class Player : Entity
         {
             var (txX, tyX) = world.WorldToTile(
                 _position + new Vector2(dir.X * _speed * dt, 0)
-                + new Vector2(Draw_Size / 2f));
+                + new Vector2(DrawSize / 2f));
             if (world.GetTile(txX, tyX)?.IsWalkable == true)
                 _position.X += dir.X * _speed * dt;
 
             var (txY, tyY) = world.WorldToTile(
                 _position + new Vector2(0, dir.Y * _speed * dt)
-                + new Vector2(Draw_Size / 2f));
+                + new Vector2(DrawSize / 2f));
             if (world.GetTile(txY, tyY)?.IsWalkable == true)
                 _position.Y += dir.Y * _speed * dt;
         }
@@ -104,26 +106,56 @@ public class Player : Entity
 
     private void UpdateSurvivalStats(float dt)
     {
-        _hunger = MathHelper.Clamp(_hunger - Hunger_Decay * dt, 0f, 100f);
-        _thirst = MathHelper.Clamp(_thirst - Thirst_Decay * dt, 0f, 100f);
+        _hunger = MathHelper.Clamp(_hunger - HungerDecay * dt, 0f, 100f);
+        _thirst = MathHelper.Clamp(_thirst - ThirstDecay * dt, 0f, 100f);
 
         if (_hunger <= 0f || _thirst <= 0f)
-            TakeDamage((int)(Starvation_Damage_Per_Sec * dt));
+            TakeDamage((int)(StarvationDamagePerSec * dt));
     }
 
     private void TryInteract(WorldMap world)
     {
-        var (tx, ty) = world.WorldToTile(_position + new Vector2(Draw_Size / 2f));
-        var tile = world.GetTile(tx, ty);
-        if (tile?.Object == null) return;
+        if (!TryFindInteractTarget(world, out var tile)) return;
 
         int gained = tile.Object.Interact();
-        if (gained > 0)
-            System.Console.WriteLine(
-                $"[Гравець] Отримано: {gained}x {tile.Object.ResorurceName}");
+        string resourceName = tile.Object.ResorurceName;
 
-        if (!tile.Object.isAlive)
+        if (gained > 0)
+            Inventory.Add(resourceName, gained);
+
+        if (tile.Object is { isAlive: false })
             tile.RemoveObject();
+    }
+
+    private bool TryFindInteractTarget(WorldMap world, out Tile tile)
+    {
+        Vector2 playerCenter = _position + new Vector2(DrawSize / 2f);
+        var (centerX, centerY) = world.WorldToTile(playerCenter);
+
+        Tile? bestTile = null;
+        float bestDistance = float.MaxValue;
+
+        for (int x = centerX - 1; x <= centerX + 1; x++)
+        {
+            for (int y = centerY - 1; y <= centerY + 1; y++)
+            {
+                Tile? candidate = world.GetTile(x, y);
+                if (candidate?.Object == null) continue;
+
+                Vector2 objectCenter = candidate.Worldposition
+                    + new Vector2(WorldMap.Tile_Size / 2f);
+                float distance = Vector2.Distance(playerCenter, objectCenter);
+
+                if (distance <= InteractionRange && distance < bestDistance)
+                {
+                    bestTile = candidate;
+                    bestDistance = distance;
+                }
+            }
+        }
+
+        tile = bestTile!;
+        return bestTile != null;
     }
 
     public override void Draw(SpriteBatch spriteBatch, Camera camera)
@@ -134,7 +166,7 @@ public class Player : Entity
         {
             XnaRect destRect = new(
                 (int)screenPos.X, (int)screenPos.Y,
-                Draw_Size, Draw_Size);
+                DrawSize, DrawSize);
             spriteBatch.Draw(_texture, destRect, Color.White);
         }
     }

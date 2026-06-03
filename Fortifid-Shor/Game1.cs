@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
@@ -65,6 +65,7 @@ public class Game1 : Game
         var startTex    = Content.Load<Texture2D>("Textures/UI/Start");
         var settingsTex = Content.Load<Texture2D>("Textures/UI/Settings");
         var exitTex     = Content.Load<Texture2D>("Textures/UI/Exit");
+        _font           = Content.Load<SpriteFont>("Fonts/UIFont");
 
         _mainMenu = new MainMenu(bgTex, startTex, settingsTex, exitTex,
                                  WindowWidth, WindowHeight);
@@ -209,6 +210,7 @@ public class Game1 : Game
         DrawBar(BAR_X, y, BAR_W, BAR_H, _player.Hunger / 100f, new Color(200, 150,  50), "Hunger");
         y += BAR_H + GAP;
         DrawBar(BAR_X, y, BAR_W, BAR_H, _player.Thirst / 100f, new Color( 50, 150, 200), "Thirst");
+        DrawInventoryHUD();
     }
 
     private void DrawBar(int x, int y, int w, int h, float fill, Color color, string label)
@@ -225,5 +227,54 @@ public class Game1 : Game
         _spriteBatch.Draw(_pixelTexture, new Rectangle(x,     y + h, w, 1), Color.White * 0.5f);
         _spriteBatch.Draw(_pixelTexture, new Rectangle(x,     y,     1, h), Color.White * 0.5f);
         _spriteBatch.Draw(_pixelTexture, new Rectangle(x + w, y,     1, h + 1), Color.White * 0.5f);
+    }
+
+    private void DrawInventoryHUD()
+    {
+        const int panelX = 20;
+        const int panelY = 104;
+        const int panelW = 230;
+        const int rowH = 28;
+        const int padding = 10;
+
+        string[] resources =
+        {
+            "Деревина",
+            "Камінь",
+            "Мідна руда",
+            "Залізна руда"
+        };
+
+        int panelH = padding * 2 + resources.Length * rowH;
+        _spriteBatch.Draw(_pixelTexture,
+            new Rectangle(panelX, panelY, panelW, panelH),
+            new Color(20, 24, 30, 190));
+
+        _spriteBatch.Draw(_pixelTexture,
+            new Rectangle(panelX, panelY, panelW, 1),
+            Color.White * 0.45f);
+        _spriteBatch.Draw(_pixelTexture,
+            new Rectangle(panelX, panelY + panelH, panelW, 1),
+            Color.White * 0.45f);
+        _spriteBatch.Draw(_pixelTexture,
+            new Rectangle(panelX, panelY, 1, panelH),
+            Color.White * 0.45f);
+        _spriteBatch.Draw(_pixelTexture,
+            new Rectangle(panelX + panelW, panelY, 1, panelH + 1),
+            Color.White * 0.45f);
+
+        for (int i = 0; i < resources.Length; i++)
+        {
+            string resource = resources[i];
+            int amount = _player.Inventory.Count(resource);
+            int y = panelY + padding + i * rowH;
+
+            _spriteBatch.DrawString(_font, resource,
+                new Vector2(panelX + padding, y),
+                Color.White);
+            _spriteBatch.DrawString(_font, amount.ToString(),
+                new Vector2(panelX + panelW - padding - 38, y),
+                new Color(230, 220, 160));
+        }
     }
 }
