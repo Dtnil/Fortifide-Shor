@@ -1,60 +1,55 @@
-﻿using Microsoft.Xna.Framework;
+using Fortifid.Systems;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Fortifid.Systems;
 using System;
 
 namespace Fortifid.UI;
 
 public enum SettingsAction { None, Back }
 
-/// <summary>
-/// Меню налаштувань: роздільна здатність, повноекранний режим,
-/// гучність музики, SFX та загальна гучність.
-/// </summary>
 public class SettingsMenu
 {
     private readonly GraphicsDeviceManager _graphics;
-    private readonly SettingsManager       _settings;
-    private readonly SoundManager          _sound;
-
+    private readonly SettingsManager _settings;
+    private readonly SoundManager _sound;
+    private readonly SpriteFont _font;
     private readonly Texture2D _pixel;
-    private readonly int       _sw, _sh;
 
+    private int _sw;
+    private int _sh;
     private MouseState _prevMouse;
     private KeyboardState _prevKb;
 
     private const int PanelW = 520;
-    private const int PanelH = 480;
+    private const int PanelH = 500;
 
     private Rectangle _panelRect;
-    
     private SliderState _sliderMaster;
     private SliderState _sliderMusic;
     private SliderState _sliderSfx;
-    
     private Rectangle _btnResolution;
-    private int       _resIndex;
+    private int _resIndex;
     private Rectangle _checkFullscreen;
-
     private Rectangle _btnBack;
-    private float     _scaleBack = 1f;
+    private float _scaleBack = 1f;
 
-    private static readonly Color ColPanel    = new(20, 25, 35, 220);
-    private static readonly Color ColSlider   = new(60, 120, 200);
-    private static readonly Color ColBg       = new(40, 40, 50);
-    private static readonly Color ColBtn      = new(45, 90, 160);
+    private static readonly Color ColPanel = new(20, 25, 35, 220);
+    private static readonly Color ColSlider = new(60, 120, 200);
+    private static readonly Color ColBg = new(40, 40, 50);
+    private static readonly Color ColBtn = new(45, 90, 160);
     private static readonly Color ColBtnHover = new(70, 130, 210);
-    private static readonly Color ColText     = Color.White;
-    private static readonly Color ColSubtext  = new(180, 180, 200);
+    private static readonly Color ColText = Color.White;
+    private static readonly Color ColSubtext = new(180, 180, 200);
 
     public SettingsMenu(GraphicsDevice gd, GraphicsDeviceManager graphics,
-        SettingsManager settings, SoundManager sound,
+        SettingsManager settings, SoundManager sound, SpriteFont font,
         int screenW, int screenH)
     {
         _graphics = graphics;
         _settings = settings;
-        _sound    = sound;
+        _sound = sound;
+        _font = font;
         _sw = screenW;
         _sh = screenH;
 
@@ -66,29 +61,42 @@ public class SettingsMenu
         {
             var (w, h) = SettingsManager.Resolutions[i];
             if (w == settings.ResolutionWidth && h == settings.ResolutionHeight)
-            { _resIndex = i; break; }
+            {
+                _resIndex = i;
+                break;
+            }
         }
 
+        BuildLayout(screenW, screenH);
+    }
+
+    public void Resize(int screenW, int screenH)
+    {
+        if (_sw == screenW && _sh == screenH)
+            return;
+
+        _sw = screenW;
+        _sh = screenH;
         BuildLayout(screenW, screenH);
     }
 
     public SettingsAction Update(GameTime gameTime)
     {
         float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        var   mouse = Mouse.GetState();
-        var   kb    = Keyboard.GetState();
-        Point mp    = mouse.Position;
+        var mouse = Mouse.GetState();
+        var kb = Keyboard.GetState();
+        Point mp = mouse.Position;
 
-        UpdateSlider(ref _sliderMaster, mouse, _prevMouse);
-        UpdateSlider(ref _sliderMusic,  mouse, _prevMouse);
-        UpdateSlider(ref _sliderSfx,    mouse, _prevMouse);
+        UpdateSlider(ref _sliderMaster, mouse);
+        UpdateSlider(ref _sliderMusic, mouse);
+        UpdateSlider(ref _sliderSfx, mouse);
 
         _sound.MasterVolume = _sliderMaster.Value;
-        _sound.MusicVolume  = _sliderMusic.Value;
-        _sound.SfxVolume    = _sliderSfx.Value;
+        _sound.MusicVolume = _sliderMusic.Value;
+        _sound.SfxVolume = _sliderSfx.Value;
         _settings.MasterVolume = _sliderMaster.Value;
-        _settings.MusicVolume  = _sliderMusic.Value;
-        _settings.SfxVolume    = _sliderSfx.Value;
+        _settings.MusicVolume = _sliderMusic.Value;
+        _settings.SfxVolume = _sliderSfx.Value;
 
         bool clicked = mouse.LeftButton == ButtonState.Released
                        && _prevMouse.LeftButton == ButtonState.Pressed;
@@ -102,7 +110,7 @@ public class SettingsMenu
             {
                 _resIndex = (_resIndex + 1) % SettingsManager.Resolutions.Length;
                 var (w, h) = SettingsManager.Resolutions[_resIndex];
-                _settings.ResolutionWidth  = w;
+                _settings.ResolutionWidth = w;
                 _settings.ResolutionHeight = h;
                 ApplyResolution();
             }
@@ -128,7 +136,7 @@ public class SettingsMenu
         }
 
         _prevMouse = mouse;
-        _prevKb    = kb;
+        _prevKb = kb;
         return SettingsAction.None;
     }
 
@@ -139,21 +147,21 @@ public class SettingsMenu
         DrawRect(sb, _panelRect, ColPanel);
         DrawRectBorder(sb, _panelRect, new Color(80, 100, 160), 2);
 
-        DrawTextCentered(sb, "НАЛАШТУВАННЯ", _panelRect.X, _panelRect.Y + 18,
-            _panelRect.Width, 2f, ColText);
+        DrawTextCentered(sb, "SETTINGS", _panelRect.X, _panelRect.Y + 22,
+            _panelRect.Width, 1.6f, ColText);
 
         var (rw, rh) = SettingsManager.Resolutions[_resIndex];
-        DrawLabel(sb, $"Роздільна здатність: {rw}×{rh}", _btnResolution.X, _btnResolution.Y - 22);
-        DrawButtonRect(sb, _btnResolution, $"{rw} × {rh}  ►");
+        DrawLabel(sb, $"Resolution: {rw} x {rh}", _btnResolution.X, _btnResolution.Y - 24);
+        DrawButtonRect(sb, _btnResolution, $"{rw} x {rh}  >");
 
-        DrawLabel(sb, "Повноекранний режим", _checkFullscreen.X + 34, _checkFullscreen.Y);
+        DrawLabel(sb, "Fullscreen", _checkFullscreen.X + 34, _checkFullscreen.Y);
         DrawCheckbox(sb, _checkFullscreen, _settings.IsFullscreen);
 
-        DrawSlider(sb, _sliderMaster, "Загальна гучність");
-        DrawSlider(sb, _sliderMusic,  "Музика");
-        DrawSlider(sb, _sliderSfx,    "Звукові ефекти");
+        DrawSlider(sb, _sliderMaster, "Master volume");
+        DrawSlider(sb, _sliderMusic, "Music");
+        DrawSlider(sb, _sliderSfx, "Sound effects");
 
-        DrawScaledButton(sb, _btnBack, "← Назад", _scaleBack);
+        DrawScaledButton(sb, _btnBack, "Back", _scaleBack);
     }
 
     private void BuildLayout(int sw, int sh)
@@ -164,55 +172,57 @@ public class SettingsMenu
 
         int cx = px + 40;
         int sliderW = PanelW - 80;
-        int y = py + 70;
+        int y = py + 95;
 
         _btnResolution = new Rectangle(cx, y, sliderW, 40);
-        y += 70;
+        y += 72;
 
         _checkFullscreen = new Rectangle(cx, y, 24, 24);
-        y += 60;
+        y += 62;
 
         _sliderMaster = new SliderState
         {
             Track = new Rectangle(cx, y, sliderW, 10),
             Value = _settings.MasterVolume
         };
-        y += 55;
+        y += 58;
 
         _sliderMusic = new SliderState
         {
             Track = new Rectangle(cx, y, sliderW, 10),
             Value = _settings.MusicVolume
         };
-        y += 55;
+        y += 58;
 
         _sliderSfx = new SliderState
         {
             Track = new Rectangle(cx, y, sliderW, 10),
             Value = _settings.SfxVolume
         };
-        y += 65;
-        
-        int bw = 160, bh = 44;
+
+        int bw = 160;
+        int bh = 44;
         _btnBack = new Rectangle(px + (PanelW - bw) / 2, py + PanelH - 64, bw, bh);
     }
 
     private void ApplyResolution()
     {
-        _graphics.PreferredBackBufferWidth  = _settings.ResolutionWidth;
+        _graphics.PreferredBackBufferWidth = _settings.ResolutionWidth;
         _graphics.PreferredBackBufferHeight = _settings.ResolutionHeight;
-        _graphics.IsFullScreen              = _settings.IsFullscreen;
+        _graphics.IsFullScreen = _settings.IsFullscreen;
         _graphics.ApplyChanges();
+        Resize(_graphics.GraphicsDevice.Viewport.Width,
+            _graphics.GraphicsDevice.Viewport.Height);
     }
 
     private struct SliderState
     {
         public Rectangle Track;
         public float Value;
-        public bool  Dragging;
+        public bool Dragging;
     }
 
-    private void UpdateSlider(ref SliderState s, MouseState mouse, MouseState prev)
+    private void UpdateSlider(ref SliderState s, MouseState mouse)
     {
         int knobX = s.Track.X + (int)(s.Value * s.Track.Width);
         var knobRect = new Rectangle(knobX - 8, s.Track.Y - 8, 16, 26);
@@ -236,10 +246,10 @@ public class SettingsMenu
 
     private void DrawSlider(SpriteBatch sb, SliderState s, string label)
     {
-        int labelY = s.Track.Y - 22;
+        int labelY = s.Track.Y - 24;
         DrawLabel(sb, label, s.Track.X, labelY);
         string pct = $"{(int)(s.Value * 100)}%";
-        DrawLabel(sb, pct, s.Track.Right - 36, labelY, ColSubtext);
+        DrawLabel(sb, pct, s.Track.Right - 48, labelY, ColSubtext);
 
         DrawRect(sb, s.Track, ColBg);
 
@@ -274,12 +284,14 @@ public class SettingsMenu
     {
         int w = (int)(r.Width * scale);
         int h = (int)(r.Height * scale);
-        int ox = (r.Width - w) / 2, oy = (r.Height - h) / 2;
+        int ox = (r.Width - w) / 2;
+        int oy = (r.Height - h) / 2;
         var scaled = new Rectangle(r.X + ox, r.Y + oy, w, h);
         bool hover = r.Contains(Mouse.GetState().Position);
         DrawRect(sb, scaled, hover ? ColBtnHover : ColBtn);
         DrawRectBorder(sb, scaled, ColSlider, 1);
-        DrawTextCentered(sb, text, scaled.X, scaled.Y + (scaled.Height / 2) - 8, scaled.Width, 1f, ColText);
+        DrawTextCentered(sb, text, scaled.X, scaled.Y + scaled.Height / 2 - 8,
+            scaled.Width, 1f, ColText);
     }
 
     private void DrawRect(SpriteBatch sb, Rectangle r, Color c)
@@ -297,15 +309,16 @@ public class SettingsMenu
         Color? color = null)
     {
         var c = color ?? ColText;
-        sb.Draw(_pixel, new Rectangle(x, y + 6, Math.Min(text.Length * 8, 300), 8), c * 0.8f);
+        sb.DrawString(_font, text, new Vector2(x, y), c);
     }
 
     private void DrawTextCentered(SpriteBatch sb, string text,
         int rx, int ry, int rw, float scale, Color color)
     {
-        int barW = Math.Min((int)(text.Length * 8 * scale), rw - 20);
-        int bx = rx + (rw - barW) / 2;
-        sb.Draw(_pixel, new Rectangle(bx, ry + 6, barW, (int)(8 * scale)), color * 0.85f);
+        Vector2 size = _font.MeasureString(text) * scale;
+        float x = rx + (rw - size.X) / 2f;
+        sb.DrawString(_font, text, new Vector2(x, ry), color, 0f,
+            Vector2.Zero, scale, SpriteEffects.None, 0f);
     }
 
     private static float Lerp(float a, float b, float t)

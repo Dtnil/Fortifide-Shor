@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 namespace Fortifid.UI;
@@ -9,11 +9,11 @@ public class MainMenu
 {
     private readonly Texture2D _bg;
     private readonly Texture2D _btnStart;
-    private readonly Texture2D _btnExit;
     private readonly Texture2D _btnSettings;
+    private readonly Texture2D _btnExit;
     
-    private readonly int _screenWidth;
-    private readonly int _screenHeight;
+    private int _screenWidth;
+    private int _screenHeight;
     
     private const int BtnWidth = 300;
     private const int BtnHeight = 80;
@@ -34,18 +34,28 @@ public class MainMenu
 
     public MainMenu(Texture2D bg,
         Texture2D btnStart,
-        Texture2D btnExit,
         Texture2D btnSettings,
+        Texture2D btnExit,
         int screenWidth,
         int screenHeight)
     {
         _bg = bg;
         _btnStart = btnStart;
-        _btnExit = btnExit;
         _btnSettings = btnSettings;
+        _btnExit = btnExit;
         _screenWidth = screenWidth;
         _screenHeight = screenHeight;
 
+        RebildRects();
+    }
+
+    public void Resize(int screenWidth, int screenHeight)
+    {
+        if (_screenWidth == screenWidth && _screenHeight == screenHeight)
+            return;
+
+        _screenWidth = screenWidth;
+        _screenHeight = screenHeight;
         RebildRects();
     }
 
@@ -56,8 +66,8 @@ public class MainMenu
         int x = (_screenWidth - BtnWidth) / 2;
         
         _rStart = new Rectangle(x, startY, BtnWidth, BtnHeight);
-        _rExit = new Rectangle(x, startY + (BtnHeight + BtnGap) * 2, BtnWidth, BtnHeight);
         _rSettings = new Rectangle(x, startY + BtnHeight + BtnGap, BtnWidth, BtnHeight);
+        _rExit = new Rectangle(x, startY + (BtnHeight + BtnGap) * 2, BtnWidth, BtnHeight);
     }
 
     public MenuAction Update(GameTime gameTime)
@@ -95,8 +105,8 @@ public class MainMenu
         DrawOverlay(spriteBatch);
         
         DrawButton(spriteBatch, _btnStart, _rStart, _scaleStart);
-        DrawButton(spriteBatch, _btnExit, _rExit, _scaleExit);
         DrawButton(spriteBatch, _btnSettings, _rSettings, _scaleSettings);
+        DrawButton(spriteBatch, _btnExit, _rExit, _scaleExit);
     }
 
     private void DrawOverlay(SpriteBatch spriteBatch)

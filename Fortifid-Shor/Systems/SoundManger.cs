@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
@@ -50,7 +50,7 @@ public class SoundManager
         TryLoadSong(content, TileType.Sand,   "Sounds/Environment/Waves");
 
         TryLoadFootstep(content, TileType.Sand,  "Sounds/Walk/Footsteps_on_sand");
-        TryLoadFootstep(content, TileType.Grass, "Sounds/Walk/Footsteps_on_grass");
+        TryLoadFootstep(content, TileType.Grass, "Sounds/Walk/Running_on_ grass");
         TryLoadFootstep(content, TileType.Shore, "Sounds/Walk/Footsteps_on_sand");
 
         MediaPlayer.IsRepeating = true;

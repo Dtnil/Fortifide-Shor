@@ -34,13 +34,13 @@
 
 #begin Sounds/Walk/Footsteps_on_sand.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/Walk/Footsteps_on_sand.mp3
 
 #begin Sounds/Walk/Running_on_ grass.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/Walk/Running_on_ grass.mp3
 
@@ -331,4 +331,3 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/Vegetation/Tree5.png;Textures/Vegetation/Tree5
-

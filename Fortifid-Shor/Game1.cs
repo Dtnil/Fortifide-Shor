@@ -21,17 +21,20 @@ public class Game1 : Game
     private const int Map_Seed     = 0;
 
     // ── стан гри ──────────────────────────────────────────────────
-    private enum GameState { MainMenu, Playing }
+    private enum GameState { MainMenu, Settings, Playing }
     private GameState _state = GameState.MainMenu;
 
     // ── головне меню ──────────────────────────────────────────────
     private MainMenu _mainMenu = null;
+    private SettingsMenu _settingsMenu = null;
 
     // ── ігрові об'єкти ────────────────────────────────────────────
     private TextureManager _textures     = null;
     private WorldMap       _world        = null;
     private Camera         _camera       = null;
     private Player         _player       = null;
+    private SettingsManager _settings    = null;
+    private SoundManager    _sound       = null;
     private readonly List<Enemy> _enemies = new();
     private Texture2D _pixelTexture      = null;
 
@@ -45,8 +48,10 @@ public class Game1 : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
 
-        _graphics.PreferredBackBufferWidth  = WindowWidth;
-        _graphics.PreferredBackBufferHeight = WindowHeight;
+        _settings = SettingsManager.Load();
+        _graphics.PreferredBackBufferWidth  = _settings.ResolutionWidth;
+        _graphics.PreferredBackBufferHeight = _settings.ResolutionHeight;
+        _graphics.IsFullScreen = _settings.IsFullscreen;
     }
 
     protected override void Initialize()
@@ -59,6 +64,7 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _textures    = new TextureManager(Content);
+        _sound       = new SoundManager();
 
         // ── завантаження текстур меню ──────────────────────────────
         var bgTex       = Content.Load<Texture2D>("Textures/UI/BG");
@@ -67,8 +73,18 @@ public class Game1 : Game
         var exitTex     = Content.Load<Texture2D>("Textures/UI/Exit");
         _font           = Content.Load<SpriteFont>("Fonts/UIFont");
 
+        int screenW = GraphicsDevice.Viewport.Width;
+        int screenH = GraphicsDevice.Viewport.Height;
+
         _mainMenu = new MainMenu(bgTex, startTex, settingsTex, exitTex,
-                                 WindowWidth, WindowHeight);
+                                 screenW, screenH);
+        _sound.LoadContent(Content);
+        _sound.MasterVolume = _settings.MasterVolume;
+        _sound.MusicVolume  = _settings.MusicVolume;
+        _sound.SfxVolume    = _settings.SfxVolume;
+
+        _settingsMenu = new SettingsMenu(GraphicsDevice, _graphics,
+            _settings, _sound, _font, screenW, screenH);
 
         // ── однопіксельна текстура для HUD ────────────────────────
         _pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
@@ -78,8 +94,11 @@ public class Game1 : Game
     // ── ініціалізація ігрового світу (викликається при старті) ────
     private void StartGame()
     {
-        _world  = new WorldMap(WindowWidth, WindowHeight, Map_Seed, _textures);
-        _camera = new Camera(WindowWidth, WindowHeight,
+        int screenW = GraphicsDevice.Viewport.Width;
+        int screenH = GraphicsDevice.Viewport.Height;
+
+        _world  = new WorldMap(Map_Widht, Map_Height, Map_Seed, _textures);
+        _camera = new Camera(screenW, screenH,
                              _world.Pixel_Width, _world.Pixel_Height);
 
         Vector2 spawnPos = _world.FindSpawnPoint();
@@ -93,13 +112,20 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
+        ResizeMenusToViewport();
+
         switch (_state)
         {
             case GameState.MainMenu:
                 var action = _mainMenu.Update(gameTime);
                 if (action == MenuAction.StartGame)   StartGame();
+                else if (action == MenuAction.OpenSettings) _state = GameState.Settings;
                 else if (action == MenuAction.Exit)   Exit();
-                // OpenSettings: можна додати пізніше
+                break;
+
+            case GameState.Settings:
+                if (_settingsMenu.Update(gameTime) == SettingsAction.Back)
+                    _state = GameState.MainMenu;
                 break;
 
             case GameState.Playing:
@@ -110,11 +136,21 @@ public class Game1 : Game
         base.Update(gameTime);
     }
 
+    private void ResizeMenusToViewport()
+    {
+        int screenW = GraphicsDevice.Viewport.Width;
+        int screenH = GraphicsDevice.Viewport.Height;
+
+        _mainMenu?.Resize(screenW, screenH);
+        _settingsMenu?.Resize(screenW, screenH);
+    }
+
     private void UpdatePlaying(GameTime gameTime)
     {
         if (Keyboard.GetState().IsKeyDown(Keys.Escape))
         {
             // повернення в головне меню
+            _sound.StopMusic();
             _state = GameState.MainMenu;
             return;
         }
@@ -125,6 +161,7 @@ public class Game1 : Game
 
         float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         _world.Update(dt);
+        UpdateSound(dt);
 
         foreach (var enemy in _enemies)
         {
@@ -137,6 +174,13 @@ public class Game1 : Game
         _camera.Follow(_player.Position + new Vector2(32, 32));
     }
 
+    private void UpdateSound(float dt)
+    {
+        var (tx, ty) = _world.WorldToTile(_player.Position + new Vector2(32, 32));
+        TileType tileType = _world.GetTile(tx, ty)?.Type ?? TileType.Grass;
+        _sound.Update(tileType, _player.IsMoving, dt);
+    }
+
     protected override void Draw(GameTime gameTime)
     {
         switch (_state)
@@ -145,6 +189,14 @@ public class Game1 : Game
                 GraphicsDevice.Clear(Color.Black);
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                 _mainMenu.Draw(_spriteBatch);
+                _spriteBatch.End();
+                break;
+
+            case GameState.Settings:
+                GraphicsDevice.Clear(Color.Black);
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+                _mainMenu.Draw(_spriteBatch);
+                _settingsMenu.Draw(_spriteBatch);
                 _spriteBatch.End();
                 break;
 
