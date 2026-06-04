@@ -14,9 +14,7 @@ public abstract class Entity
     protected float _speed;
     protected Texture2D? _texture;
     
-    public string Name => _name;
     public int Hp => _hp;
-    public int MaxHP => _maxHP;
     public bool IsAlive => _hp > 0;
     public Vector2 Position => _position;
     
@@ -40,12 +38,12 @@ public abstract class Entity
         spriteBatch.Draw(_texture, screenPos, Color.White);
     }
 
-    public virtual void TakeDamage(int amount)
+    public  void TakeDamage(int amount)
     {
         _hp = Math.Max(0, _hp - amount);
     }
 
-    public void Heal(int amount)
+    protected void Heal(int amount)
     {
         _hp = Math.Min(_maxHP, _hp + amount);
     }

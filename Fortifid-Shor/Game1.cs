@@ -19,16 +19,15 @@ public class Game1 : Game
     private const int Map_Width    = 1280;
     private const int Map_Height   = 720;
     private const int Map_Seed     = 0;
+    private const float DayCycleDuration = 180f;
+    private const float MaxNightDarkness = 0.58f;
 
-    // ── стан гри ──────────────────────────────────────────────────
     private enum GameState { MainMenu, Settings, Playing }
     private GameState _state = GameState.MainMenu;
 
-    // ── головне меню ──────────────────────────────────────────────
     private MainMenu _mainMenu = null;
     private SettingsMenu _settingsMenu = null;
 
-    // ── ігрові об'єкти ────────────────────────────────────────────
     private TextureManager _textures     = null;
     private WorldMap       _world        = null;
     private Camera         _camera       = null;
@@ -42,6 +41,7 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch = null;
     private SpriteFont? _font;
     private KeyboardState _previousPlayingKeyboard;
+    private float _dayTimer;
 
     public Game1()
     {
@@ -67,7 +67,6 @@ public class Game1 : Game
         _textures    = new TextureManager(Content);
         _sound       = new SoundManager();
 
-        // ── завантаження текстур меню ──────────────────────────────
         var bgTex       = Content.Load<Texture2D>("Textures/UI/BG");
         var startTex    = Content.Load<Texture2D>("Textures/UI/Start");
         var settingsTex = Content.Load<Texture2D>("Textures/UI/Settings");
@@ -87,12 +86,10 @@ public class Game1 : Game
         _settingsMenu = new SettingsMenu(GraphicsDevice, _graphics,
             _settings, _sound, _font, screenW, screenH);
 
-        // ── однопіксельна текстура для HUD ────────────────────────
         _pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
         _pixelTexture.SetData(new[] { Color.White });
     }
 
-    // ── ініціалізація ігрового світу (викликається при старті) ────
     private void StartGame()
     {
         int screenW = GraphicsDevice.Viewport.Width;
@@ -104,6 +101,7 @@ public class Game1 : Game
 
         Vector2 spawnPos = _world.FindSpawnPoint();
         _player = new Player(_textures.Get("Player"), spawnPos);
+        _dayTimer = DayCycleDuration * 0.15f;
 
         _enemies.Clear();
         SpawnEnemies();
@@ -152,7 +150,6 @@ public class Game1 : Game
 
         if (kb.IsKeyDown(Keys.Escape))
         {
-            // повернення в головне меню
             _sound.StopMusic();
             _state = GameState.MainMenu;
             _previousPlayingKeyboard = kb;
@@ -166,6 +163,7 @@ public class Game1 : Game
             TrySwordAttack();
 
         float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        UpdateDayNightCycle(dt);
         _world.Update(dt);
         UpdateSound(dt);
 
@@ -178,8 +176,13 @@ public class Game1 : Game
         }
 
         RemoveDefeatedEnemies();
-        _camera.Follow(_player.Position + new Vector2(32, 32));
+        _camera.Follow(_player.Ceneter);
         _previousPlayingKeyboard = kb;
+    }
+
+    private void UpdateDayNightCycle(float dt)
+    {
+        _dayTimer = (_dayTimer + dt) % DayCycleDuration;
     }
 
     private bool WasPressed(KeyboardState kb, Keys key)
@@ -255,6 +258,7 @@ public class Game1 : Game
                 foreach (var enemy in _enemies)
                     enemy.Draw(_spriteBatch, _camera);
                 _player.Draw(_spriteBatch, _camera);
+                DrawDayNightOverlay();
                 DrawHUD();
                 _spriteBatch.End();
                 break;
@@ -263,7 +267,6 @@ public class Game1 : Game
         base.Draw(gameTime);
     }
 
-    // ──────────────────────────────────────────────────────────────
     private void SpawnEnemies()
     {
         var rng    = new System.Random();
@@ -346,6 +349,24 @@ public class Game1 : Game
         y += BAR_H + GAP;
         DrawBar(BAR_X, y, BAR_W, BAR_H, _player.Thirst / 100f, new Color( 50, 150, 200), "Thirst");
         DrawInventoryHUD();
+    }
+
+    private void DrawDayNightOverlay()
+    {
+        float cycle = _dayTimer / DayCycleDuration;
+        float nightAmount = (1f - System.MathF.Cos(cycle * MathHelper.TwoPi)) * 0.5f;
+        float darkness = nightAmount * MaxNightDarkness;
+
+        if (darkness <= 0.01f)
+            return;
+
+        int screenW = GraphicsDevice.Viewport.Width;
+        int screenH = GraphicsDevice.Viewport.Height;
+        var overlayColor = new Color(8, 18, 45) * darkness;
+
+        _spriteBatch.Draw(_pixelTexture,
+            new Rectangle(0, 0, screenW, screenH),
+            overlayColor);
     }
 
     private void DrawBar(int x, int y, int w, int h, float fill, Color color, string label)

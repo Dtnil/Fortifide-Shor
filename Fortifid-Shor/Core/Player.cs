@@ -153,8 +153,9 @@ public class Player : Entity
         _hunger = MathHelper.Clamp(_hunger - HungerDecay * dt, 0f, 100f);
         _thirst = MathHelper.Clamp(_thirst - ThirstDecay * dt, 0f, 100f);
 
-        if (_hunger <= 0f || _thirst <= 0f)
+        if (_hunger <= 0f && _thirst <= 0f)
             TakeDamage((int)(StarvationDamagePerSec * dt));
+        
     }
 
     private void UpdateAnimation(float dt)
@@ -176,10 +177,17 @@ public class Player : Entity
 
     private void UpdateFacingDirection(Vector2 dir)
     {
+        int nextFacingRow;
         if (MathF.Abs(dir.X) > MathF.Abs(dir.Y))
-            _facingRow = dir.X < 0 ? 2 : 3;
+            nextFacingRow = dir.X < 0 ? 3 : 2;
         else
-            _facingRow = dir.Y < 0 ? 1 : 0;
+            nextFacingRow = dir.Y < 0 ? 1 : 0;
+
+        if (nextFacingRow == _facingRow) return;
+
+        _facingRow = nextFacingRow;
+        _currentFrame = _facingRow >= 2 ? 1 : 0;
+        _animationTimer = 0f;
     }
 
     private void UpdateStatusMessage(float dt)
@@ -257,7 +265,7 @@ public class Player : Entity
             return true;
 
         Eat(25);
-        SetStatus("Краб переможений: +голод");
+        SetStatus("Краб переможений: -голод");
         return true;
     }
 
@@ -305,7 +313,7 @@ public class Player : Entity
         }
 
         Drink(35);
-        SetStatus("Вода: +спрага");
+        SetStatus("Вода: -спрага");
     }
 
     private bool IsNearDrinkableWater(WorldMap world)
