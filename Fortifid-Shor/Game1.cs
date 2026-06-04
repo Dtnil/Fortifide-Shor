@@ -16,8 +16,8 @@ public class Game1 : Game
     /// </summary>
     private const int WindowWidth  = 1280;
     private const int WindowHeight = 720;
-    private const int Map_Widht    = 120;
-    private const int Map_Height   = 90;
+    private const int Map_Width    = 1280;
+    private const int Map_Height   = 720;
     private const int Map_Seed     = 0;
 
     // ── стан гри ──────────────────────────────────────────────────
@@ -97,7 +97,7 @@ public class Game1 : Game
         int screenW = GraphicsDevice.Viewport.Width;
         int screenH = GraphicsDevice.Viewport.Height;
 
-        _world  = new WorldMap(Map_Widht, Map_Height, Map_Seed, _textures);
+        _world  = new WorldMap(Map_Width, Map_Height, Map_Seed, _textures);
         _camera = new Camera(screenW, screenH,
                              _world.Pixel_Width, _world.Pixel_Height);
 
@@ -225,20 +225,56 @@ public class Game1 : Game
         int frameCount = crabTex.Width > crabTex.Height
             ? crabTex.Width / crabTex.Height : 1;
 
-        for (int i = 0; i < 8; i++)
+        var farSpawnTiles = new List<Point>();
+        var fallbackSpawnTiles = new List<Point>();
+        var playerTile = _world.WorldToTile(_player.Position + new Vector2(32, 32));
+        const int enemyCount = 8;
+        const int minTilesFromPlayer = 3;
+
+        for (int tx = 0; tx < Map_Width; tx++)
         {
-            for (int attempt = 0; attempt < 50; attempt++)
+            for (int ty = 0; ty < Map_Height; ty++)
             {
-                int tx = rng.Next(Map_Widht);
-                int ty = rng.Next(Map_Height);
-                var t  = _world.GetTile(tx, ty);
-                if (t?.Type is TileType.Sand or TileType.Grass && t.Object == null)
-                {
-                    var pos = new Vector2(tx * ts, ty * ts);
-                    _enemies.Add(new Crab(crabTex, pos, frameCount));
-                    break;
-                }
+                var tile = _world.GetTile(tx, ty);
+                if (tile == null || !CanSpawnEnemyOnTile(tile)) continue;
+                if (tx == playerTile.tileX && ty == playerTile.tileY) continue;
+
+                int dx = tx - playerTile.tileX;
+                int dy = ty - playerTile.tileY;
+                var spawnTile = new Point(tx, ty);
+
+                if (dx * dx + dy * dy >= minTilesFromPlayer * minTilesFromPlayer)
+                    farSpawnTiles.Add(spawnTile);
+                else
+                    fallbackSpawnTiles.Add(spawnTile);
             }
+        }
+
+        Shuffle(farSpawnTiles, rng);
+        Shuffle(fallbackSpawnTiles, rng);
+        farSpawnTiles.AddRange(fallbackSpawnTiles);
+
+        int spawnsToCreate = System.Math.Min(enemyCount, farSpawnTiles.Count);
+        for (int i = 0; i < spawnsToCreate; i++)
+        {
+            Point tile = farSpawnTiles[i];
+            var pos = new Vector2(tile.X * ts, tile.Y * ts);
+            _enemies.Add(new Crab(crabTex, pos, frameCount));
+        }
+    }
+
+    private static bool CanSpawnEnemyOnTile(Tile tile)
+    {
+        return (tile.Type == TileType.Sand || tile.Type == TileType.Grass)
+               && tile.Object == null;
+    }
+
+    private static void Shuffle<T>(IList<T> items, System.Random rng)
+    {
+        for (int i = items.Count - 1; i > 0; i--)
+        {
+            int j = rng.Next(i + 1);
+            (items[i], items[j]) = (items[j], items[i]);
         }
     }
 

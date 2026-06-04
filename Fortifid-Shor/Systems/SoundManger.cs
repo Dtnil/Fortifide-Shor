@@ -39,9 +39,12 @@ public class SoundManager
 
     private readonly Dictionary<TileType, Song> _ambientSongs = new();
 
-    private readonly Dictionary<TileType, SoundEffect> _footstepSfx = new();
+    private readonly Dictionary<TileType, SoundEffect>         _footstepSfx       = new();
+    private readonly Dictionary<TileType, SoundEffectInstance> _footstepInstances = new();
     private float _footstepTimer     = 0f;
     private const float FootstepInterval = 0.45f;   // секунди між кроками
+    private readonly Random _rng = new Random();
+
     public void LoadContent(ContentManager content)
     {
         TryLoadSong(content, TileType.Grass,  "Sounds/Environment/Forest");
@@ -52,6 +55,14 @@ public class SoundManager
         TryLoadFootstep(content, TileType.Sand,  "Sounds/Walk/Footsteps_on_sand");
         TryLoadFootstep(content, TileType.Grass, "Sounds/Walk/Running_on_ grass");
         TryLoadFootstep(content, TileType.Shore, "Sounds/Walk/Footsteps_on_sand");
+
+        // Створюємо інстанси для кроків — щоб звуки не накладались
+        foreach (var kv in _footstepSfx)
+        {
+            var inst = kv.Value.CreateInstance();
+            inst.IsLooped = false;
+            _footstepInstances[kv.Key] = inst;
+        }
 
         MediaPlayer.IsRepeating = true;
         ApplyVolumes();
@@ -70,7 +81,7 @@ public class SoundManager
     {
         if (sfx == null) return;
         float pitch = pitchVariance > 0f
-            ? (float)(new Random().NextDouble() * pitchVariance * 2 - pitchVariance)
+            ? (float)(_rng.NextDouble() * pitchVariance * 2 - pitchVariance)
             : 0f;
         sfx.Play(_sfxVolume * _masterVolume, pitch, 0f);
     }
@@ -106,16 +117,33 @@ public class SoundManager
         if (_footstepTimer < FootstepInterval) return;
         _footstepTimer = 0f;
 
-        if (_footstepSfx.TryGetValue(tile, out SoundEffect sfx))
-            PlaySfx(sfx, 0.15f);
-        else if (_footstepSfx.TryGetValue(TileType.Sand, out SoundEffect fallback))
-            PlaySfx(fallback, 0.15f);
+        // Використовуємо SoundEffectInstance: перевіряємо стан перш ніж відтворити,
+        // щоб уникнути накладання звуків кроків.
+        SoundEffectInstance? inst = null;
+        if (!_footstepInstances.TryGetValue(tile, out inst))
+            _footstepInstances.TryGetValue(TileType.Sand, out inst);
+
+        if (inst == null) return;
+
+        // Якщо вже грає — зупиняємо (уникаємо поліфонії)
+        if (inst.State == SoundState.Playing)
+            inst.Stop();
+
+        float vol = _sfxVolume * _masterVolume;
+        float pitch = (float)(_rng.NextDouble() * 0.3 - 0.15);
+        inst.Volume = vol;
+        inst.Pitch  = pitch;
+        inst.Play();
     }
 
     private void ApplyVolumes()
     {
         MediaPlayer.Volume = _musicVolume * _masterVolume;
         SoundEffect.MasterVolume = _sfxVolume * _masterVolume;
+
+        // Оновлюємо гучність існуючих інстансів
+        foreach (var inst in _footstepInstances.Values)
+            inst.Volume = _sfxVolume * _masterVolume;
     }
 
     private void TryLoadSong(ContentManager content, TileType tile, string path)

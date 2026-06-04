@@ -56,6 +56,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Entities/Crab_Anim.png;Textures/Entities/Crab_Anim
 
+#begin Textures/Entities/Player.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Entities/Player.png
+
 #begin Textures/Ores/Coper_ore.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -331,3 +343,4 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/Vegetation/Tree5.png;Textures/Vegetation/Tree5
+

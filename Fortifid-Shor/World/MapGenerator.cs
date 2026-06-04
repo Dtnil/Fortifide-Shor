@@ -54,7 +54,7 @@ public static class MapGenerator
         float offsetX = (float)(rng.NextDouble() * 1000);
         float offsetY = (float)(rng.NextDouble() * 1000);
 
-        float scale = 0.04f;
+        float scale = 0.025f;
 
         for (int x = 0; x < w; x++)
         {
@@ -64,7 +64,7 @@ public static class MapGenerator
                     (x + offsetX) * scale,
                     (y + offsetY) * scale,
                     octaves: 4
-                    );
+                );
                 float islandMask = ComputeIslandMask(x, y, w, h);
                 
                 map[x, y] = MathHelper.Clamp(noiseVal * islandMask, 0f, 1f);
@@ -80,10 +80,10 @@ public static class MapGenerator
         
         float dist = MathF.Sqrt(nx * nx + ny * ny);
         
-        float mask = 1f - MathHelper.Clamp(dist * 1.4f, 0f, 1f);
-        return mask*mask;
+        float mask = 1f - MathHelper.Clamp(dist * 1.0f, 0f, 1f);
+        return mask * mask * mask;
     }
-
+    
     private static float FractionalBrowianMotion(float x, float y, int octaves)
     {
         float value = 0f;
@@ -101,7 +101,6 @@ public static class MapGenerator
         
         return value / maxValue;
     }
-
     private static float SmoothNoise(float x, float y)
     {
         int ix = (int)MathF.Floor(x);
