@@ -102,7 +102,7 @@ public class Game1 : Game
                              _world.Pixel_Width, _world.Pixel_Height);
 
         Vector2 spawnPos = _world.FindSpawnPoint();
-        _player = new Player(null, spawnPos);
+        _player = new Player(_textures.Get("Player"), spawnPos);
 
         _enemies.Clear();
         SpawnEnemies();
@@ -206,7 +206,7 @@ public class Game1 : Game
                 _world.Draw(_spriteBatch, _camera);
                 foreach (var enemy in _enemies)
                     enemy.Draw(_spriteBatch, _camera);
-                DrawPlayerPlaceholder();
+                _player.Draw(_spriteBatch, _camera);
                 DrawHUD();
                 _spriteBatch.End();
                 break;
@@ -228,8 +228,8 @@ public class Game1 : Game
         var farSpawnTiles = new List<Point>();
         var fallbackSpawnTiles = new List<Point>();
         var playerTile = _world.WorldToTile(_player.Position + new Vector2(32, 32));
-        const int enemyCount = 8;
-        const int minTilesFromPlayer = 3;
+        const int enemyCount = 12;
+        const int minTilesFromPlayer = 4;
 
         for (int tx = 0; tx < Map_Width; tx++)
         {
@@ -265,8 +265,7 @@ public class Game1 : Game
 
     private static bool CanSpawnEnemyOnTile(Tile tile)
     {
-        return (tile.Type == TileType.Sand || tile.Type == TileType.Grass)
-               && tile.Object == null;
+        return tile.Type == TileType.Sand && tile.Object == null;
     }
 
     private static void Shuffle<T>(IList<T> items, System.Random rng)
@@ -321,7 +320,7 @@ public class Game1 : Game
     {
         const int panelX = 20;
         const int panelY = 104;
-        const int panelW = 230;
+        const int panelW = 300;
         const int rowH = 28;
         const int padding = 10;
 
@@ -330,7 +329,13 @@ public class Game1 : Game
             "Деревина",
             "Камінь",
             "Мідна руда",
-            "Залізна руда"
+            "Залізна руда",
+            "Мідний злиток",
+            "Залізний злиток",
+            "Кам'яна сокира",
+            "Мідна кирка",
+            "Залізна кирка",
+            "Залізний меч"
         };
 
         int panelH = padding * 2 + resources.Length * rowH;
@@ -363,6 +368,59 @@ public class Game1 : Game
             _spriteBatch.DrawString(_font, amount.ToString(),
                 new Vector2(panelX + panelW - padding - 38, y),
                 new Color(230, 220, 160));
+        }
+
+        DrawCraftingHUD(panelX, panelY + panelH + 12);
+    }
+
+    private void DrawCraftingHUD(int panelX, int panelY)
+    {
+        const int panelW = 330;
+        const int rowH = 24;
+        const int padding = 10;
+
+        string[] lines =
+        {
+            "R: плавити мідь",
+            "T: плавити залізо",
+            "1: кам'яна сокира",
+            "2: мідна кирка",
+            "3: залізна кирка",
+            "4: залізний меч"
+        };
+
+        int statusRows = string.IsNullOrWhiteSpace(_player.StatusMessage) ? 0 : 1;
+        int panelH = padding * 2 + (lines.Length + statusRows) * rowH;
+
+        _spriteBatch.Draw(_pixelTexture,
+            new Rectangle(panelX, panelY, panelW, panelH),
+            new Color(18, 22, 28, 190));
+
+        _spriteBatch.Draw(_pixelTexture,
+            new Rectangle(panelX, panelY, panelW, 1),
+            Color.White * 0.45f);
+        _spriteBatch.Draw(_pixelTexture,
+            new Rectangle(panelX, panelY + panelH, panelW, 1),
+            Color.White * 0.45f);
+        _spriteBatch.Draw(_pixelTexture,
+            new Rectangle(panelX, panelY, 1, panelH),
+            Color.White * 0.45f);
+        _spriteBatch.Draw(_pixelTexture,
+            new Rectangle(panelX + panelW, panelY, 1, panelH + 1),
+            Color.White * 0.45f);
+
+        for (int i = 0; i < lines.Length; i++)
+        {
+            _spriteBatch.DrawString(_font, lines[i],
+                new Vector2(panelX + padding, panelY + padding + i * rowH),
+                Color.White);
+        }
+
+        if (!string.IsNullOrWhiteSpace(_player.StatusMessage))
+        {
+            _spriteBatch.DrawString(_font, _player.StatusMessage,
+                new Vector2(panelX + padding, panelY + padding + lines.Length * rowH),
+                new Color(240, 210, 120));
         }
     }
 }

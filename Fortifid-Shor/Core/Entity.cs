@@ -42,7 +42,7 @@ public abstract class Entity
 
     public virtual void TakeDamage(int amount)
     {
-        _hp = Math.Max(_maxHP, _hp - amount);
+        _hp = Math.Max(0, _hp - amount);
     }
 
     public void Heal(int amount)

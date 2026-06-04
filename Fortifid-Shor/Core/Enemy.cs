@@ -27,7 +27,7 @@ public abstract class Enemy : Entity
         Vector2 dir = target - _position;
         if (dir.LengthSquared() < 1f) return;
         dir.Normalize();
-        _position += dir * _damage * dt;
+        _position += dir * _speed * dt;
     }
 
     protected bool CanSeePlayer(Player player)

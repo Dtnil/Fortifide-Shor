@@ -44,6 +44,7 @@ public class Crab : Enemy
 
         float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         _attackTimer = MathHelper.Max(0f, _attackTimer - dt);
+        UpdateAnimation(dt);
 
         if (CanSeePlayer(player))
         {
