@@ -11,8 +11,8 @@ namespace Fortifid.Core;
 
 public class Player : Entity
 {
-    private float _hunger = 100f;
-    private float _thirst = 100f;
+    private float _hunger = 200f;
+    private float _thirst = 200f;
 
     private const float HungerDecay = 1.5f;
     private const float ThirstDecay = 2f;
@@ -25,6 +25,7 @@ public class Player : Entity
 
     private const float InteractCooldown = 0.5f;
     private const float InteractionRange = 95f;
+    private const float SwordRange = 105f;
     private float _interactTimer;
     private float _animationTimer;
     private float _statusTimer;
@@ -61,7 +62,8 @@ public class Player : Entity
         if (kb.IsKeyDown(Keys.E) && _interactTimer <= 0f)
         {
             _interactTimer = InteractCooldown;
-            TryInteract(world);
+            if (!TryInteract(world))
+                TryDrinkFromWater(world);
         }
 
         if (WasPressed(kb, Keys.R))
@@ -224,24 +226,104 @@ public class Player : Entity
         SetStatus($"Створено: {toolName}");
     }
 
-    private void SetStatus(string message)
+    public void SetStatus(string message)
     {
         StatusMessage = message;
         _statusTimer = 2.2f;
     }
 
-    private void TryInteract(WorldMap world)
+    public bool TryAttackCrab(Crab crab)
     {
-        if (!TryFindInteractTarget(world, out var tile)) return;
+        if (!IsAlive || !crab.IsAlive)
+            return false;
+
+        if (!Inventory.Has("Залізний меч", 1))
+        {
+            SetStatus("Потрібен залізний меч");
+            return false;
+        }
+
+        float distance = Vector2.Distance(Ceneter, crab.Ceneter);
+        if (distance > SwordRange)
+        {
+            SetStatus("Краб занадто далеко");
+            return false;
+        }
+
+        crab.TakeDamage(30);
+        SetStatus("Удар мечем");
+
+        if (crab.IsAlive)
+            return true;
+
+        Eat(25);
+        SetStatus("Краб переможений: +голод");
+        return true;
+    }
+
+    private bool TryInteract(WorldMap world)
+    {
+        if (!TryFindInteractTarget(world, out var tile)) return false;
 
         int gained = tile.Object.Interact();
         string resourceName = tile.Object.ResorurceName;
 
         if (gained > 0)
-            Inventory.Add(resourceName, gained);
+        {
+            int bonus = GetToolBonus(resourceName);
+            Inventory.Add(resourceName, gained + bonus);
+            if (bonus > 0)
+                SetStatus($"+{bonus} бонус інструмента");
+        }
 
         if (tile.Object is { isAlive: false })
             tile.RemoveObject();
+
+        return true;
+    }
+
+    private int GetToolBonus(string resourceName)
+    {
+        return resourceName switch
+        {
+            "Деревина" when Inventory.Has("Кам'яна сокира", 1) => 1,
+            "Камінь" when Inventory.Has("Залізна кирка", 1) => 2,
+            "Камінь" when Inventory.Has("Мідна кирка", 1) => 1,
+            "Мідна руда" when Inventory.Has("Залізна кирка", 1) => 2,
+            "Мідна руда" when Inventory.Has("Мідна кирка", 1) => 1,
+            "Залізна руда" when Inventory.Has("Залізна кирка", 1) => 2,
+            _ => 0
+        };
+    }
+
+    private void TryDrinkFromWater(WorldMap world)
+    {
+        if (!IsNearDrinkableWater(world))
+        {
+            SetStatus("Поруч немає води");
+            return;
+        }
+
+        Drink(35);
+        SetStatus("Вода: +спрага");
+    }
+
+    private bool IsNearDrinkableWater(WorldMap world)
+    {
+        Vector2 playerCenter = _position + new Vector2(DrawSize / 2f);
+        var (centerX, centerY) = world.WorldToTile(playerCenter);
+
+        for (int x = centerX - 1; x <= centerX + 1; x++)
+        {
+            for (int y = centerY - 1; y <= centerY + 1; y++)
+            {
+                Tile? tile = world.GetTile(x, y);
+                if (tile?.Type is TileType.Water or TileType.Shore)
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     private bool TryFindInteractTarget(WorldMap world, out Tile tile)

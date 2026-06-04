@@ -41,6 +41,7 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch = null;
     private SpriteFont? _font;
+    private KeyboardState _previousPlayingKeyboard;
 
     public Game1()
     {
@@ -147,17 +148,22 @@ public class Game1 : Game
 
     private void UpdatePlaying(GameTime gameTime)
     {
-        if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+        var kb = Keyboard.GetState();
+
+        if (kb.IsKeyDown(Keys.Escape))
         {
             // повернення в головне меню
             _sound.StopMusic();
             _state = GameState.MainMenu;
+            _previousPlayingKeyboard = kb;
             return;
         }
 
         if (!_player.IsAlive) return;
 
         _player.Update(gameTime, _world);
+        if (WasPressed(kb, Keys.F))
+            TrySwordAttack();
 
         float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         _world.Update(dt);
@@ -171,7 +177,49 @@ public class Game1 : Game
                 enemy.Update(gameTime, _world);
         }
 
+        RemoveDefeatedEnemies();
         _camera.Follow(_player.Position + new Vector2(32, 32));
+        _previousPlayingKeyboard = kb;
+    }
+
+    private bool WasPressed(KeyboardState kb, Keys key)
+    {
+        return kb.IsKeyDown(key) && !_previousPlayingKeyboard.IsKeyDown(key);
+    }
+
+    private void TrySwordAttack()
+    {
+        Crab? nearestCrab = null;
+        float nearestDistance = float.MaxValue;
+
+        foreach (var enemy in _enemies)
+        {
+            if (enemy is not Crab crab || !crab.IsAlive) continue;
+
+            float distance = Vector2.Distance(_player.Ceneter, crab.Ceneter);
+            if (distance < nearestDistance)
+            {
+                nearestCrab = crab;
+                nearestDistance = distance;
+            }
+        }
+
+        if (nearestCrab == null)
+        {
+            _player.SetStatus("Поруч немає крабів");
+            return;
+        }
+
+        _player.TryAttackCrab(nearestCrab);
+    }
+
+    private void RemoveDefeatedEnemies()
+    {
+        for (int i = _enemies.Count - 1; i >= 0; i--)
+        {
+            if (!_enemies[i].IsAlive)
+                _enemies.RemoveAt(i);
+        }
     }
 
     private void UpdateSound(float dt)
@@ -381,12 +429,15 @@ public class Game1 : Game
 
         string[] lines =
         {
+            "E: взаємодія / пити воду",
+            "F: удар мечем",
             "R: плавити мідь",
             "T: плавити залізо",
             "1: кам'яна сокира",
             "2: мідна кирка",
             "3: залізна кирка",
-            "4: залізний меч"
+            "4: залізний меч",
+            "Інструменти дають бонус добування"
         };
 
         int statusRows = string.IsNullOrWhiteSpace(_player.StatusMessage) ? 0 : 1;

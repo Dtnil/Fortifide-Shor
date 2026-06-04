@@ -20,7 +20,7 @@ public abstract class Entity
     public bool IsAlive => _hp > 0;
     public Vector2 Position => _position;
     
-    public Vector2 Ceneter => _position + new Vector2(_texture?.Width / 2f ?? 16f, _texture?.Height / 2f ?? 16f);
+    public Vector2 Ceneter => _position + new Vector2(32f, 32f);
 
     protected Entity(string name, int maxHP, float speed)
     {
