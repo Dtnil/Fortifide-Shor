@@ -15,7 +15,10 @@ public class OreDeposit : MapObject
     private readonly Texture2D _oreItemTexture;
     private float _dropDisplayTime;
 
-    public override string ResorurceName => _oreType == OreType.Copper ? "Мідна руда" : "Залізна руда";
+    public override Fortifid.Core.Items.IItem Resource =>
+        _oreType == OreType.Copper
+            ? Fortifid.Core.Items.GameItems.CopperOre
+            : Fortifid.Core.Items.GameItems.IronOre;
 
     public OreDeposit(Texture2D rockTexture, Texture2D oreItemTexture,
         Vector2 worldPosition, int drawWidth, int drawHeight,

@@ -13,7 +13,7 @@ public abstract class MapObject
 
     public bool isAlive { get; protected set; } = true;
 
-    public abstract string ResorurceName { get; }
+    public abstract Fortifid.Core.Items.IItem Resource { get; }
 
     protected MapObject(Texture2D texture, Vector2 worldPosition, int drawWidth, int drawHeight)
     {

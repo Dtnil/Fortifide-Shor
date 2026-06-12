@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using Fortifid.Core;
+using Fortifid.Core.Items;
 using Fortifid.Systems;
 using Fortifid.World;
 using Fortifid.UI;
@@ -393,18 +394,18 @@ public class Game1 : Game
         const int rowH = 28;
         const int padding = 10;
 
-        string[] resources =
+        IItem[] resources =
         {
-            "Деревина",
-            "Камінь",
-            "Мідна руда",
-            "Залізна руда",
-            "Мідний злиток",
-            "Залізний злиток",
-            "Кам'яна сокира",
-            "Мідна кирка",
-            "Залізна кирка",
-            "Залізний меч"
+            GameItems.Wood,
+            GameItems.Stone,
+            GameItems.CopperOre,
+            GameItems.IronOre,
+            GameItems.CopperIngot,
+            GameItems.IronIngot,
+            GameItems.StoneAxe,
+            GameItems.CopperPickaxe,
+            GameItems.IronPickaxe,
+            GameItems.IronSword
         };
 
         int panelH = padding * 2 + resources.Length * rowH;
@@ -427,11 +428,11 @@ public class Game1 : Game
 
         for (int i = 0; i < resources.Length; i++)
         {
-            string resource = resources[i];
+            IItem resource = resources[i];
             int amount = _player.Inventory.Count(resource);
             int y = panelY + padding + i * rowH;
 
-            _spriteBatch.DrawString(_font, resource,
+            _spriteBatch.DrawString(_font, resource.Name,
                 new Vector2(panelX + padding, y),
                 Color.White);
             _spriteBatch.DrawString(_font, amount.ToString(),

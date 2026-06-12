@@ -10,7 +10,8 @@ public class RockObject : MapObject
     private readonly int _maxHits;
     private int _hitsLeft;
 
-    public override string ResorurceName => "Камінь";
+    public override Fortifid.Core.Items.IItem Resource =>
+        Fortifid.Core.Items.GameItems.Stone;
 
     public RockObject(
         Texture2D texture, Vector2 worldPosition,

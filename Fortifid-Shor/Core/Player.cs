@@ -1,4 +1,5 @@
 using System;
+using Fortifid.Core.Items;
 using Fortifid.Systems;
 using XnaRect = Microsoft.Xna.Framework.Rectangle;
 using Fortifid.World;
@@ -37,7 +38,7 @@ public class Player : Entity
 
     public float Hunger => _hunger;
     public float Thirst => _thirst;
-    public Inventory Inventory { get; } = new();
+    public IInventory Inventory { get; } = new Inventory();
     public string StatusMessage { get; private set; } = "";
 
     public Player(Texture2D? texture, Vector2 spawnPosition)
@@ -67,31 +68,31 @@ public class Player : Entity
         }
 
         if (WasPressed(kb, Keys.R))
-            TrySmelt("Мідна руда", "Мідний злиток");
+            TrySmelt(GameItems.CopperOre, GameItems.CopperIngot);
 
         if (WasPressed(kb, Keys.T))
-            TrySmelt("Залізна руда", "Залізний злиток");
+            TrySmelt(GameItems.IronOre, GameItems.IronIngot);
 
         if (WasPressed(kb, Keys.D1))
-            TryCraft("Кам'яна сокира",
-                ("Деревина", 3),
-                ("Камінь", 2));
+            TryCraft(GameItems.StoneAxe,
+                (GameItems.Wood, 3),
+                (GameItems.Stone, 2));
 
         if (WasPressed(kb, Keys.D2))
-            TryCraft("Мідна кирка",
-                ("Мідний злиток", 2),
-                ("Деревина", 2),
-                ("Камінь", 1));
+            TryCraft(GameItems.CopperPickaxe,
+                (GameItems.CopperIngot, 2),
+                (GameItems.Wood, 2),
+                (GameItems.Stone, 1));
 
         if (WasPressed(kb, Keys.D3))
-            TryCraft("Залізна кирка",
-                ("Залізний злиток", 3),
-                ("Деревина", 2));
+            TryCraft(GameItems.IronPickaxe,
+                (GameItems.IronIngot, 3),
+                (GameItems.Wood, 2));
 
         if (WasPressed(kb, Keys.D4))
-            TryCraft("Залізний меч",
-                ("Залізний злиток", 2),
-                ("Деревина", 1));
+            TryCraft(GameItems.IronSword,
+                (GameItems.IronIngot, 2),
+                (GameItems.Wood, 1));
 
         _previousKeyboard = kb;
     }
@@ -204,34 +205,34 @@ public class Player : Entity
         return kb.IsKeyDown(key) && !_previousKeyboard.IsKeyDown(key);
     }
 
-    private void TrySmelt(string oreName, string ingotName)
+    private void TrySmelt(IItem ore, IItem ingot)
     {
-        if (!Inventory.Remove(oreName, 1))
+        if (!Inventory.Remove(ore))
         {
-            SetStatus($"Потрібно: {oreName}");
+            SetStatus($"Потрібно: {ore.Name}");
             return;
         }
 
-        Inventory.Add(ingotName, 1);
-        SetStatus($"+1 {ingotName}");
+        Inventory.Add(ingot);
+        SetStatus($"+1 {ingot.Name}");
     }
 
-    private void TryCraft(string toolName, params (string itemName, int amount)[] cost)
+    private void TryCraft(IItem item, params (IItem item, int amount)[] cost)
     {
-        foreach (var item in cost)
+        foreach (var ingredient in cost)
         {
-            if (!Inventory.Has(item.itemName, item.amount))
+            if (!Inventory.Contains(ingredient.item, ingredient.amount))
             {
-                SetStatus($"Не вистачає: {item.itemName}");
+                SetStatus($"Не вистачає: {ingredient.item.Name}");
                 return;
             }
         }
 
-        foreach (var item in cost)
-            Inventory.Remove(item.itemName, item.amount);
+        foreach (var ingredient in cost)
+            Inventory.Remove(ingredient.item, ingredient.amount);
 
-        Inventory.Add(toolName, 1);
-        SetStatus($"Створено: {toolName}");
+        Inventory.Add(item);
+        SetStatus($"Створено: {item.Name}");
     }
 
     public void SetStatus(string message)
@@ -245,7 +246,7 @@ public class Player : Entity
         if (!IsAlive || !crab.IsAlive)
             return false;
 
-        if (!Inventory.Has("Залізний меч", 1))
+        if (!Inventory.Contains(GameItems.IronSword))
         {
             SetStatus("Потрібен залізний меч");
             return false;
@@ -274,12 +275,12 @@ public class Player : Entity
         if (!TryFindInteractTarget(world, out var tile)) return false;
 
         int gained = tile.Object.Interact();
-        string resourceName = tile.Object.ResorurceName;
+        IItem resource = tile.Object.Resource;
 
         if (gained > 0)
         {
-            int bonus = GetToolBonus(resourceName);
-            Inventory.Add(resourceName, gained + bonus);
+            int bonus = Inventory.GetResourceBonus(resource);
+            Inventory.Add(resource, gained + bonus);
             if (bonus > 0)
                 SetStatus($"+{bonus} бонус інструмента");
         }
@@ -288,20 +289,6 @@ public class Player : Entity
             tile.RemoveObject();
 
         return true;
-    }
-
-    private int GetToolBonus(string resourceName)
-    {
-        return resourceName switch
-        {
-            "Деревина" when Inventory.Has("Кам'яна сокира", 1) => 1,
-            "Камінь" when Inventory.Has("Залізна кирка", 1) => 2,
-            "Камінь" when Inventory.Has("Мідна кирка", 1) => 1,
-            "Мідна руда" when Inventory.Has("Залізна кирка", 1) => 2,
-            "Мідна руда" when Inventory.Has("Мідна кирка", 1) => 1,
-            "Залізна руда" when Inventory.Has("Залізна кирка", 1) => 2,
-            _ => 0
-        };
     }
 
     private void TryDrinkFromWater(WorldMap world)

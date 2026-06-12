@@ -10,7 +10,8 @@ public class VegetationObject : MapObject
     private readonly float _opacity;
     private float _fallTimer;
 
-    public override string ResorurceName => "Деревина";
+    public override Fortifid.Core.Items.IItem Resource =>
+        Fortifid.Core.Items.GameItems.Wood;
 
     public VegetationObject(Texture2D texture, Vector2 worldPosition,
         int drawWidth, int drawHeight,
