@@ -73,12 +73,16 @@ public class Game1 : Game
         var settingsTex = Content.Load<Texture2D>("Textures/UI/Settings");
         var exitTex     = Content.Load<Texture2D>("Textures/UI/Exit");
         _font           = Content.Load<SpriteFont>("Fonts/UIFont");
+        var menuTitleFont = Content.Load<SpriteFont>("Fonts/MenuTitle");
+
+        _pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
+        _pixelTexture.SetData(new[] { Color.White });
 
         int screenW = GraphicsDevice.Viewport.Width;
         int screenH = GraphicsDevice.Viewport.Height;
 
         _mainMenu = new MainMenu(bgTex, startTex, settingsTex, exitTex,
-                                 screenW, screenH);
+                                 _pixelTexture, menuTitleFont, screenW, screenH);
         _sound.LoadContent(Content);
         _sound.MasterVolume = _settings.MasterVolume;
         _sound.MusicVolume  = _settings.MusicVolume;
@@ -87,8 +91,6 @@ public class Game1 : Game
         _settingsMenu = new SettingsMenu(GraphicsDevice, _graphics,
             _settings, _sound, _font, screenW, screenH);
 
-        _pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
-        _pixelTexture.SetData(new[] { Color.White });
     }
 
     private void StartGame()
